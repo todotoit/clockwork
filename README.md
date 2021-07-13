@@ -8,6 +8,7 @@ Requires NodeJS `> v14.17`
 ```js
 export default {
   // use top level configs to set default values for all processes
+  reboot_at: "04:00", // reboots pc at a specified time
   timers: {
     start: "12:30",
     stop: "15:25",
