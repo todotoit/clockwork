@@ -36,15 +36,15 @@ function init() {
 }
 
 function reboot() {
-  consola.info(chalk.yellow("system reboot") + "initiated");
+  log("system reboot initiated");
   stopAll();
   if (process.platform === "win32") {
     exec("shutdown -r -f -t 5", function (error, stdout, stderr) {
-      console.log(stdout);
+      log(stdout);
     });
   } else {
     exec("shutdown -r 1", function (error, stdout, stderr) {
-      console.log(stdout);
+      log(stdout);
     });
   }
 }
