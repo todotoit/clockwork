@@ -1,5 +1,6 @@
 import later from "later";
 import chalk from "chalk";
+import { exec } from 'child_process';
 import { log, error } from "../utils/index.js";
 
 later.date.localTime();
@@ -26,6 +27,7 @@ export default class Process {
     this.startupInterval = later.setInterval(() => {
       log(`Scheduled start: ${this.logName} (${this.config.timers.start})`);
       if (this.disableTimers) return;
+      if (this.config.on_start) this.run(this.config.on_start)
       this.start();
     }, startupSchedule);
 
@@ -33,6 +35,7 @@ export default class Process {
     this.startupInterval = later.setInterval(() => {
       log(`Scheduled stop: ${this.logName} (${this.config.timers.stop})`);
       if (this.disableTimers) return;
+      if (this.config.on_stop) this.run(this.config.on_stop)
       this.stop();
     }, shutdownSchedule);
   }
@@ -66,5 +69,19 @@ export default class Process {
         return resolve();
       });
     });
+  }
+
+  run(command) {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+          console.log(`error: ${error.message}`);
+          return;
+      }
+      if (stderr) {
+          console.log(`stderr: ${stderr}`);
+          return;
+      }
+      console.log(`stdout: ${stdout}`);
+  })
   }
 }
