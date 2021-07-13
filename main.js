@@ -4,7 +4,7 @@ import pm2 from "pm2";
 import child_process from "child_process";
 import { log, error } from "./utils/index.js";
 import Process from "./modules/process.js";
-import config from './config.js'
+import config from "./config.js";
 
 dotenv.config();
 let stopping = false;
@@ -19,7 +19,11 @@ pm2.connect(function (err) {
 });
 
 function init() {
-  processes = config.processes.map((p) => new Process(p, pm2));
+  const defaultConfig = { ...config };
+  delete defaultConfig.processes;
+  processes = config.processes.map(
+    (p) => new Process({ ...defaultConfig, ...p }, pm2)
+  );
 }
 
 function reboot() {

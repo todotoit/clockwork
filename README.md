@@ -3,7 +3,22 @@
 Production process manager to handle program launch and stop at specified times.
 Requires NodeJS `> v14.17`
 
-### Sample config
+## Config
+
+```js
+export default {
+  // use top level configs to set default values for all processes
+  timers: {
+    start: "12:30",
+    stop: "15:25",
+  },
+  processes: [
+    /* Process list */
+  ],
+};
+```
+
+### Sample process config
 
 ```js
     {

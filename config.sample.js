@@ -1,13 +1,24 @@
 export default {
+  timers: {
+    start: "12:30",
+    stop: "15:25",
+  },
   processes: [
     {
-      name: "script-1",
+      name: "exe-1",
       script: "SCRIPT_PATH_HERE",
       cwd: "SCRIPT_CWD_HERE",
+      autostart: true,
+      autorestart: false,
+      exec_interpreter: "none",
+      exec_mode: "fork_mode",
+      force_timed_operation: false,
       timers: {
-        start: "08:00",
-        stop: "20:00",
+        start: "08:30",
+        stop: "20:30",
       },
+      on_start: "vcgencmd display_power 1",
+      on_stop: "vcgencmd display_power 0",
     },
     {
       name: "script-2",
@@ -18,7 +29,7 @@ export default {
       },
     },
     {
-      name: "script-3",
+      name: "exe-3",
       script: "SCRIPT_PATH_HERE",
       args: "-screen-height 1080 -screen-width 1920",
       exec_interpreter: "none",
