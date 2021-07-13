@@ -39,11 +39,15 @@ function reboot() {
   log("system reboot initiated");
   stopAll();
   if (process.platform === "win32") {
-    exec("shutdown -r -f -t 5", function (error, stdout, stderr) {
+    exec("shutdown -r -f -t 5", function (err, stdout, stderr) {
+      if (err) error(err);
+      if (stderr) error(stderr);
       log(stdout);
     });
   } else {
-    exec("shutdown -r 1", function (error, stdout, stderr) {
+    exec("shutdown -r 0", function (err, stdout, stderr) {
+      if (err) error(err);
+      if (stderr) error(stderr);
       log(stdout);
     });
   }
