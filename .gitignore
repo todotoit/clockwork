@@ -12,7 +12,7 @@ node_modules
 .env.local
 .env.*.local
 
-kw-config.json
+config.json
 
 # Log files
 npm-debug.log*
