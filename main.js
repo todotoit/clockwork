@@ -30,7 +30,7 @@ function init() {
     const rebootSchedule = later.parse.text("at " + config.reboot_at);
     rebootInterval = later.setInterval(() => {
       log(`Scheduled reboot at ${config.reboot_at}`);
-      //reboot();
+      reboot();
     }, rebootSchedule);
   }
 }
