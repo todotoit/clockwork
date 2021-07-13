@@ -1,20 +1,12 @@
 import dotenv from "dotenv";
 import path from "path";
-import fs from "fs";
 import pm2 from "pm2";
 import child_process from "child_process";
 import { log, error } from "./utils/index.js";
 import Process from "./modules/process.js";
+import config from './config.js'
+
 dotenv.config();
-
-let config;
-try {
-  config = JSON.parse(fs.readFileSync("./config.json", "utf8"));
-} catch {
-  error("Config file not found.");
-  process.exit();
-}
-
 let stopping = false;
 let processes = [];
 
