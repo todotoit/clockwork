@@ -1,0 +1,36 @@
+{
+  "processes": [
+    {
+      "name": "kw-detection",
+      "script": "SCRIPT_PATH_HERE",
+      "cwd": "SCRIPT_CWD_HERE",
+      "timers": {
+        "start": "08:00",
+        "stop": "20:00"
+      }
+    },
+    {
+      "name": "kw-motors",
+      "script": "SCRIPT_PATH_HERE",
+      "cwd": "SCRIPT_CWD_HERE",
+      "env": {
+        "windowsHide": false
+      }
+    },
+    {
+      "name": "kw-controller",
+      "script": "SCRIPT_PATH_HERE",
+      "args": "-screen-height 1080 -screen-width 1920",
+      "exec_interpreter": "none",
+      "exec_mode": "fork_mode",
+      "env": {
+        "windowsHide": false
+      }
+    },
+    {
+      "name": "kw-server",
+      "script": "node_modules/http-server/bin/http-server",
+      "args": "SCRIPT_ARGS_HERE"
+    }
+  ]
+}

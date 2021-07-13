@@ -1,0 +1,19 @@
+{
+  "name": "clockwork",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "consola": "^2.15.3",
+    "dotenv": "^10.0.0",
+    "later": "^1.2.0",
+    "pm2": "^5.1.0"
+  }
+}
