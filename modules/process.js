@@ -1,6 +1,6 @@
 import later from "later";
 import chalk from "chalk";
-import { exec } from 'child_process';
+import { exec } from "child_process";
 import { log, error } from "../utils/index.js";
 
 later.date.localTime();
@@ -16,7 +16,10 @@ export default class Process {
 
   init() {
     if (this.config.timers) this.setupTimers(this.config);
-    if (this.config.autostart) this.start();
+    if (this.config.autostart) {
+      if (!this.config.force_timed_operation || this.checkOperationHours())
+        this.start();
+    }
   }
 
   setupTimers() {
@@ -27,7 +30,6 @@ export default class Process {
     this.startupInterval = later.setInterval(() => {
       log(`Scheduled start: ${this.logName} (${this.config.timers.start})`);
       if (this.disableTimers) return;
-      if (this.config.on_start) this.run(this.config.on_start)
       this.start();
     }, startupSchedule);
 
@@ -35,7 +37,6 @@ export default class Process {
     this.startupInterval = later.setInterval(() => {
       log(`Scheduled stop: ${this.logName} (${this.config.timers.stop})`);
       if (this.disableTimers) return;
-      if (this.config.on_stop) this.run(this.config.on_stop)
       this.stop();
     }, shutdownSchedule);
   }
@@ -43,6 +44,7 @@ export default class Process {
   start() {
     return new Promise((resolve, reject) => {
       log(`Starting ${this.logName}`);
+      if (this.config.on_start) this.run(this.config.on_start);
       this.pm2.restart(this.config, (err) => {
         if (err) {
           error(err);
@@ -55,11 +57,9 @@ export default class Process {
   }
 
   stop() {
-    if (!this.running) {
-      log(this.logName + " is not running");
-      return Promise.resolve(true);
-    }
+    if (!this.running) return Promise.resolve(true);
     log("Stopping " + this.logName);
+    if (this.config.on_stop) this.run(this.config.on_stop);
     return new Promise((resolve, reject) => {
       this.pm2.stop(this.config.name, (err) => {
         if (err) {
@@ -74,14 +74,23 @@ export default class Process {
   run(command) {
     exec(command, (error, stdout, stderr) => {
       if (error) {
-          console.log(`error: ${error.message}`);
-          return;
+        console.log(error.message);
+        return;
       }
       if (stderr) {
-          console.log(`stderr: ${stderr}`);
-          return;
+        console.log(stderr);
+        return;
       }
-      console.log(`stdout: ${stdout}`);
-  })
+      console.log(stdout);
+    });
+  }
+
+  checkOperationHours() {
+    const d = new Date();
+    const dayStart = new Date();
+    dayStart.setHours(...this.config.timers.start.split(":"));
+    const dayEnd = new Date();
+    dayEnd.setHours(...this.config.timers.stop.split(":"));
+    return d > dayStart && d < dayEnd;
   }
 }
