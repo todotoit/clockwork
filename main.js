@@ -1,13 +1,14 @@
 import dotenv from "dotenv";
-import path from "path";
 import pm2 from "pm2";
-import child_process from "child_process";
+import later from "later";
+import { exec } from "child_process";
 import { log, error } from "./utils/index.js";
-import Process from "./modules/process.js";
 import config from "./config.js";
+import Process from "./modules/process.js";
 
 dotenv.config();
 let stopping = false;
+let rebootInterval = null;
 let processes = [];
 
 pm2.connect(function (err) {
@@ -24,17 +25,28 @@ function init() {
   processes = config.processes.map(
     (p) => new Process({ ...defaultConfig, ...p }, pm2)
   );
+  if (config.reboot_at) {
+    if (rebootInterval) rebootInterval.clear();
+    const rebootSchedule = later.parse.text("at " + config.reboot_at);
+    rebootInterval = later.setInterval(() => {
+      log(`Scheduled reboot at ${config.reboot_at}`);
+      //reboot();
+    }, rebootSchedule);
+  }
 }
 
 function reboot() {
   consola.info(chalk.yellow("system reboot") + "initiated");
-  child_process.exec(
-    path.resolve("./reboot.bat"),
-    function (error, stdout, stderr) {
-      console.log(stdout);
-    }
-  );
   stopAll();
+  if (process.platform === "win32") {
+    exec("shutdown -r -f -t 5", function (error, stdout, stderr) {
+      console.log(stdout);
+    });
+  } else {
+    exec("shutdown -r 1", function (error, stdout, stderr) {
+      console.log(stdout);
+    });
+  }
 }
 
 function startAll() {
