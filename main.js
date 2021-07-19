@@ -45,7 +45,7 @@ function reboot() {
       log(stdout);
     });
   } else {
-    exec("reboot", function (err, stdout, stderr) {
+    exec("sudo reboot", function (err, stdout, stderr) {
       if (err) error(err);
       if (stderr) error(stderr);
       log(stdout);
