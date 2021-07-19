@@ -26,19 +26,23 @@ export default class Process {
     if (this.startupInterval) this.startupInterval.clear();
     if (this.shutdownInterval) this.shutdownInterval.clear();
 
-    const startupSchedule = later.parse.text("at " + this.config.timers.start);
-    this.startupInterval = later.setInterval(() => {
-      log(`Scheduled start: ${this.logName} (${this.config.timers.start})`);
-      if (this.disableTimers) return;
-      this.start();
-    }, startupSchedule);
+    if(this.config.timers.start) {
+      const startupSchedule = later.parse.text("at " + this.config.timers.start);
+      this.startupInterval = later.setInterval(() => {
+        log(`Scheduled start: ${this.logName} (${this.config.timers.start})`);
+        if (this.disableTimers) return;
+        this.start();
+      }, startupSchedule);
+    }
 
-    const shutdownSchedule = later.parse.text("at " + this.config.timers.stop);
-    this.startupInterval = later.setInterval(() => {
-      log(`Scheduled stop: ${this.logName} (${this.config.timers.stop})`);
-      if (this.disableTimers) return;
-      this.stop();
-    }, shutdownSchedule);
+    if(this.config.timers.stop) {
+      const shutdownSchedule = later.parse.text("at " + this.config.timers.stop);
+      this.startupInterval = later.setInterval(() => {
+        log(`Scheduled stop: ${this.logName} (${this.config.timers.stop})`);
+        if (this.disableTimers) return;
+        this.stop();
+      }, shutdownSchedule);
+    }
   }
 
   start() {
