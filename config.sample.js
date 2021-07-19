@@ -1,8 +1,8 @@
 export default {
   reboot_at: "04:00",
   timers: {
-    start: "12:30",
-    stop: "15:25",
+    start: "08:00",
+    stop: "21:00",
   },
   processes: [
     {
